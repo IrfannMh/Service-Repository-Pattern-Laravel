@@ -56,15 +56,13 @@ class TaskRepository
 	}
 
 	// ---------------------------------------
-	public function deltask($taskId)
+	public function destroy($taskId)
 	{
 		$task = $this->tasks->deleteQuery(['_id'=>$taskId]);
 	}
 
-	public function createSubtask($existTask,$title,$description)
+	public function createSub($existTask,$title,$description)
 	{
-		$subtasks = isset($existTask['subtasks']) ? $existTask['subtasks'] : [];
-
 		$subtasks[] = [
 			'_id'=> (string) new \MongoDB\BSON\ObjectId(),
 			'title'=>$title,
@@ -76,10 +74,8 @@ class TaskRepository
 		$this->tasks->save($existTask);
 	}
 
-	public function deleteSubtask($existTask,$subtaskId)
+	public function deleteSub($existTask,$subtaskId)
 	{
-		$subtasks = isset($existTask['subtasks']) ? $existTask['subtasks'] : [];
-
 		// Pencarian dan penghapusan subtask
 		$subtasks = array_filter($subtasks, function($subtask) use($subtaskId) {
 			if($subtask['_id'] == $subtaskId)

@@ -61,20 +61,8 @@ class TaskService {
 	// delete task
 	public function deleteTask(string $taskId)
 	{
-		$existTask = $this->taskRepository->getById($taskId);
-		if(!$existTask)
-		{
-			return response()->json([
-				"message"=> "Task ".$taskId." tidak ada"
-			], 401);
-
-		}else{
-
-		$tasks= $this->taskRepository->deltask($taskId);
-		return response()->json([
-			'message'=> 'Success delete task '.$taskId
-		]);
-		}
+		$this->taskRepository->destroy($taskId);
+			
 	}
 	
 
@@ -99,15 +87,19 @@ class TaskService {
 
 
 	// create sub task
-	public function addSubtask($existTask,$title,$description)
-	{		
-		$this->taskRepository->createSubtask($existTask,$title,$description);
+	public function createSubTask($existTask,$title,$description)
+	{	
+		$subtasks = isset($existTask['subtasks']) ? $existTask['subtasks'] : [];
+	
+		$this->taskRepository->createSub($existTask, $title, $description);
 	}
 
 
 	// delete sub task
-	public function delSubtask($existTask,$subtaskId)
+	public function deleteSubTask($existTask,$subtaskId)
 	{
-		$this->taskRepository->deleteSubtask($existTask,$subtaskId);
+		$subtasks = isset($existTask['subtasks']) ? $existTask['subtasks'] : [];
+	
+		$this->taskRepository->deleteSub($existTask, $subtaskId);
 	}
 }
